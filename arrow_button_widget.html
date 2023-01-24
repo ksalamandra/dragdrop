@@ -1,0 +1,64 @@
+<style>
+   .{{ widget.attrs.id }}-inputfile {
+   width: 0.1px;
+   height: 0.1px;
+   opacity: 0;
+   overflow: hidden;
+   position: absolute;
+   z-index: -1;
+   }
+   .{{ widget.attrs.id }}-inputfile + label {
+    font-size: 1.2em;
+    font-weight: 700;
+    color:  #79aec8;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 20px;
+   }
+   .{{ widget.attrs.id }}-inputfile:focus + label,
+   .inputfile + label:hover {
+   color: #13609f;
+   }
+   .{{ widget.attrs.id }}-inputfile + label {
+   cursor: pointer; /* "hand" cursor */
+   }
+   .{{ widget.attrs.id }}-inputfile:focus + label {
+   outline: 1px dotted #000;
+   outline: -webkit-focus-ring-color auto 5px;
+   }
+   .{{ widget.attrs.id }}-arrow_button{
+   padding: 10px;
+   background: #e2e2e2;
+   border-radius: 5px;
+   }
+
+</style>
+
+   <input {% include "django/forms/widgets/attrs.html" %} class="{{ widget.attrs.id }}-inputfile" aria-label="xxx" type="file" id="{{ widget.attrs.id }}">
+<label for="{{ widget.attrs.id }}" class="fileinputlabel"><strong id="{{ widget.attrs.id }}_strong" class="{{ widget.attrs.id }}-arrow_button">Clique para adicionar arquivos <i class="fas fa-upload"></i></strong></label>
+   <p id="{{ widget.attrs.id }}_span"></p>
+<script>
+
+var inputs = document.querySelectorAll( '.{{ widget.attrs.id }}-inputfile' );
+Array.prototype.forEach.call( inputs, function( input )
+{
+	var label	 = input.nextElementSibling,
+		labelVal = label.innerHTML;
+
+	input.addEventListener( 'change', function( e )
+	{
+		var fileName = '';
+		if( this.files && this.files.length > 1 )
+			fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+		else
+			fileName = e.target.value.split( '\'' ).pop();
+
+		if( fileName ) {
+            document.getElementById('{{ widget.attrs.id }}_span').innerHTML = fileName.replace("C:\\fakepath\\", "");
+            $(label).html('<strong id="{{ widget.attrs.id }}_strong" class="{{ widget.attrs.id }}-arrow_button">'+fileName.replace("C:\\fakepath\\", "")+' <i class="fas fa-clipboard-check"></i></strong>')
+        }
+		else
+			label.innerHTML = labelVal;
+	});
+});
+</script>

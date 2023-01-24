@@ -1,0 +1,135 @@
+{% include 'js/ex/bootstrap4.3.1.js' %}
+{% include 'css/ex/bootstrap4.3.1.css' %}
+{% include 'js/ex/mark.js' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+<a href="/mundiengip/reports/bigdata_clientusingentry/excel-export/?date__day={{now.day}}&date__month={{ now.month }}&date__year={{ now.year }}" class="historylink"><i class="fas fa-clipboard-check"></i> Gerar Relatório dos últimos 7 dias</a>
+
+<canvas id="myChart-{{ obj.id }}" width="400" height="150"></canvas>
+
+<script>
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+COLORS= [
+    'rgba(5, 28, 48, 0)',
+]
+
+BORDERS = [
+    'darkblue',
+    'darkgreen',
+    'darkred',
+    'rgba(96, 81, 3, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+]
+/*
+var LABELS = [];
+var DATA = [];
+var DATA2 = [];
+var MONITORED = [];
+var DATASETS = [];
+{% for label in x.0 %}
+    LABELS.push("{{ label|safe }}");
+{% endfor %}
+
+{% for data in y %}
+    DATA.push({{ data|safe }});
+{% endfor %}
+
+{% for data in y2 %}
+    DATA2.push({{ data|safe }});
+{% endfor %}
+
+{% for data in z %}
+    MONITORED.push({{ data|safe }});
+{% endfor %}
+
+if (DATA) {
+    DATASETS.push(
+        {
+              data: DATA,
+              borderWidth: 1,
+              borderColor: "rgba(152, 221, 225, 1)",
+              backgroundColor: "rgba(152, 221, 225, .3)",
+              label: 'Número total de clientes',
+              //yAxisID: 'A',
+        },
+)};
+
+//if (DATA2) {
+//    DATASETS.push(
+//        {
+//              data: DATA2,
+//              borderWidth: 1,
+//              borderColor: "rgba(255, 221, 225, 1)",
+//              backgroundColor: "rgba(255, 221, 225, .3)",
+//              label: 'Receita total dos clientes',
+//              yAxisID: 'B',
+//        },
+//)};
+
+
+console.log(DATA);
+console.log(DATA2);
+
+console.log(DATASETS);
+// create initial empty chart
+var ctx_live = document.getElementById("myChart-{{ obj.id }}");
+var myChart = new Chart(ctx_live, {
+  type: 'bar',
+  data: {
+    labels: LABELS,
+    datasets: DATASETS
+  },
+  options: {
+    responsive: true,
+    tooltips: {
+        callbacks: {
+            label: function(tooltipItem, data) {
+                console.log(tooltipItem);
+                if (tooltipItem.value < 7600){
+                    return tooltipItem.value
+                }
+                return `R$ ${numberWithCommas(tooltipItem.value)},00 `;
+            },
+        }
+    },
+    title: {
+      display: true,
+      text: "Gráfico de utilização dos clientes no período da pandemia",
+    },
+    legend: {
+      display: true
+    },
+    //scales: {
+    //  yAxes: [
+    //      {
+    //          id: 'A',
+    //          position: 'left',
+    //          type: 'linear',
+    //          ticks: {
+    //                callback: function(value, index, values) {
+    //                    return value;
+    //                },
+    //                beginAtZero: true,
+    //            }
+    //      }
+    //      //{
+    //      //    id: 'B',
+    //      //    position: 'right',
+    //      //    ticks: {
+    //      //          // Include a dollar sign in the ticks
+    //      //          callback: function(value, index, values) {
+    //      //              return `R$ ${numberWithCommas(value)},00 `;
+    //      //          },
+    //      //          beginAtZero: true,
+    //      //      }
+    //      //},
+    //  ]
+    //}
+  }
+});*/
+</script>

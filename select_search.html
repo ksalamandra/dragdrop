@@ -1,0 +1,184 @@
+<style>
+.{{ widget.attrs.id }}-dropdown {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.{{ widget.attrs.id }}-dropdown-content {
+  display: none;
+  background-color: {{  widget.attrs.content_bg|default:'white' }};
+  color: {{  widget.attrs.content_fg|default:'black' }};
+  min-width: 160px;
+  width: fit-content;
+  box-shadow: 0px 15px 12px 15px rgba(0,0,0,.3);
+  z-index: 1000000;
+  border-radius: 0px 0px 10px 10px;
+  max-height: 160px;
+  overflow: scroll
+}
+
+.{{widget.attrs.id}}-select_search_option{
+    padding: 12px 16px;
+}
+
+
+.{{widget.attrs.id}}-focused{
+    background-color: {{  widget.attrs.content_focused_bg|default:'#464141!important' }};
+    color: {{  widget.attrs.content_focused_fg|default:'white' }};
+}
+
+mark{
+    color: orange!important;
+    font-weight: bolder;
+    padding: 0!important;
+    background: #00000000!important;
+}
+
+</style>
+
+<div class="{{ widget.attrs.id }}-dropdown">
+    <input type="text" placeholder="{{ widget.attrs.placeholder|default:'Search...' }}" id="{{ widget.attrs.id }}_text_input" class="dropdown-input"> 
+    {{ icon|default:'<i class="fas fa-search"></i>' }}
+    <input type="hidden" name="{{ widget.name }}" id="{{ widget.attrs.id }}" value="{{ widget.value }}" data-label="">
+    <div class="{{ widget.attrs.id }}-dropdown-content" id="{{ widget.attrs.id }}_dropdown_content" style="display: none">
+    {% if not dynamic_only %}
+    {% for group_name, group_choices, group_index in widget.optgroups %}
+    {% for option in group_choices %}
+        <div data-value="{{ option.value }}" class="{{widget.attrs.id}}-select_search_option">{{ option.label }}</div>
+        {% if option.value == widget.value %}<script>$("#{{ widget.attrs.id }}_text_input").val("{{ option.label }}")</script>{% endif %}
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.es6.js" integrity="sha256-oJVtRvjW0hKWqWLz4zE/LkkwaExq/s9ceP/rCtQ5Pmk=" crossorigin="anonymous"></script>
+<script>
+$( document ).ready(function(){
+
+
+    if ($("#{{widget.attrs.id}}_text_input").val().includes("---------")){$("#{{widget.attrs.id}}_text_input").val("")}
+    $("#{{widget.attrs.id}}_text_input").attr("autocomplete","off");
+    $("#{{widget.attrs.id}}_text_input").focus(function(){
+        $("#{{ widget.attrs.id }}_dropdown_content").unmark();
+        //$("#{{widget.attrs.id}}_dropdown_content").css("display", "block");
+        var value = $(this).val().toLowerCase();
+        $("#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1 || $(this).val().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // PRESS KEY TEXT INPUT
+    $("#{{widget.attrs.id}}_text_input").keydown(function(e){
+        $("#{{widget.attrs.id}}_dropdown_content").css("display", "block");
+        if (e.which == 40 || e.which == 38){
+            e.preventDefault();
+            focused = $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option.{{widget.attrs.id}}-focused')
+            if (focused.length){
+                current = focused.first()
+                focused.removeClass("{{widget.attrs.id}}-focused");
+                //SETAS PARA CIMA E BAIXO
+                increment = 43
+                if (e.which == 40) {
+                	current.nextAll(':visible:first').addClass("{{widget.attrs.id}}-focused");
+                	y = $("#{{widget.attrs.id}}_dropdown_content").scrollTop()
+                	$("#{{widget.attrs.id}}_dropdown_content").scrollTop(y + increment)
+                };
+                if (e.which == 38) {
+                	current.prevAll(':visible:first').addClass("{{widget.attrs.id}}-focused");
+                	y = $("#{{widget.attrs.id}}_dropdown_content").scrollTop()
+                	$("#{{widget.attrs.id}}_dropdown_content").scrollTop(y - increment)
+
+                };
+
+            } else{
+                $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option:visible').first().addClass("{{widget.attrs.id}}-focused");
+                $('#id_pop_dropdown_content').scrollTop(0)
+            }
+
+        }
+        else if (e.which == 13 || e.which == 9){
+            focused = $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option.{{widget.attrs.id}}-focused')
+            if (focused.length){
+                e.preventDefault();
+                value = focused.first()
+                $("#{{ widget.attrs.id }}").val(value.data('value'));
+                $("#{{ widget.attrs.id }}").attr('data-test', value.text());
+                $("#{{ widget.attrs.id }}_text_input").val(value.text());
+                $("#{{ widget.attrs.id }}_dropdown_content").css("display", "none");
+                focused.removeClass("{{widget.attrs.id}}-focused");
+            }
+
+        }
+    });
+
+    // FILTER
+    $("#{{widget.attrs.id}}_text_input").keyup(function(e){
+        var value = $(this).val().toLowerCase();
+        $("#{{ widget.attrs.id }}_dropdown_content").unmark();
+        $("#{{ widget.attrs.id }}_dropdown_content").mark(value);
+        $("#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1 || $(this).val().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("#{{widget.attrs.id}}_text_input").click(function(e){
+        $("#{{widget.attrs.id}}_dropdown_content").css("display", "block");
+        var value = $(this).val().toLowerCase();
+        $("#{{ widget.attrs.id }}_dropdown_content").unmark();
+        $("#{{ widget.attrs.id }}_dropdown_content").mark(value);
+        $("#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1 || $(this).val().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // MOUSEOVER DROPDOWN
+    $(document).on('mouseover', '.{{widget.attrs.id}}-select_search_option', function(){
+        $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option.{{widget.attrs.id}}-focused').removeClass('{{widget.attrs.id}}-focused');
+        $(this).addClass("{{widget.attrs.id}}-focused");
+    });
+
+    // DROPDOWN CLICK
+    $(document).on('click', '.{{widget.attrs.id}}-select_search_option', function(){
+        $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option.{{widget.attrs.id}}-focused').removeClass('{{widget.attrs.id}}-focused');
+        $("#{{ widget.attrs.id }}").val($(this).data('value'));
+        $("#{{ widget.attrs.id }}").trigger('change');
+        $("#{{ widget.attrs.id }}").attr('data-test', $(this).text());
+        $("#{{ widget.attrs.id }}_text_input").val($(this).text());
+        $("#{{ widget.attrs.id }}_dropdown_content").css("display", "none");
+
+    });
+
+    // FOCUS OUT
+    $("#{{widget.attrs.id}}_text_input").focusout(function(){
+        $("#{{ widget.attrs.id }}_dropdown_content").unmark();
+        $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option.{{widget.attrs.id}}-focused').removeClass('{{widget.attrs.id}}-focused');
+        if($('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option:hover').length || $('#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option:focus').length) {
+            return
+        }else{
+            match = false;
+            $("#{{widget.attrs.id}}_dropdown_content").hide()
+            selector = $("#{{ widget.attrs.id }}_dropdown_content .{{widget.attrs.id}}-select_search_option")
+            selector.each(function(){
+                if ($(this).text().toLowerCase() == $("#{{ widget.attrs.id }}_text_input").val().toLowerCase()){
+                  match = true;
+                  $("#{{ widget.attrs.id }}").val($(this).data('value'));
+                  $("#{{ widget.attrs.id }}").trigger('change');
+                  $("#{{ widget.attrs.id }}").attr('data-test', $(this).text());
+                  $("#{{ widget.attrs.id }}_text_input").val($(this).text());
+                  $("#{{ widget.attrs.id }}_dropdown_content").css("display", "none")
+                }
+            });
+            if (!match){
+                $("#{{ widget.attrs.id }}_text_input").val($("#{{ widget.attrs.id }}").attr('data-test'));
+            }
+        }
+    });
+});
+
+
+</script>
+
+{% include "mywidgets/select_one_url.html" %}
+

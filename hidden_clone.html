@@ -1,0 +1,12 @@
+{% include "django/forms/widgets/input.html" %}
+
+{% if widget.attrs.dependent %}
+<script>
+	$("#{{widget.attrs.dependent}}").keyup(function(e){
+		$("#{{widget.attrs.id}}").val($("#{{widget.attrs.dependent}}").val());
+	});
+	$("#{{widget.attrs.dependent}}").focusout(function(e){
+		$("#{{widget.attrs.id}}").val($("#{{widget.attrs.dependent}}").val());
+	});
+</script>
+{% endif %}

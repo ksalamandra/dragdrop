@@ -1,0 +1,96 @@
+<script>
+function {{ widget.attrs.id }}_get_from_url(html_id, url, arg="obj", dependent_id=false, val=false){
+    if (dependent_id){
+    	data1 = {};
+    	data1[arg] = $("#" + dependent_id).val();
+    } else {
+    	data1 = {};
+    }
+	$.ajax({
+		url: url,
+	    data: data1,
+	    success: function(data2) {
+	    	html = "";
+	    	{% if select_search %}
+	        for (var i = 0; i < data2.length; i++) {
+	        	html += '<div data-value="'+ data2[i]['value'] +'" class="{{widget.attrs.id}}-select_search_option">'+ data2[i]['label'] +'</div>';      
+	        }
+	    	$("#" + html_id + "_dropdown_content").html(html);
+	    	if (val && $("#{{ widget.attrs.id }}").val()){
+	    		$("#{{ widget.attrs.id }}_text_input").val($('div[data-value=' + $("#{{ widget.attrs.id }}").val() + ']').html())
+	    	}
+
+	        {% else %}
+	    	for (var i = 0; i < data2.length; i++) {
+	    		html += '<option value="'+data2[i]['value']+'">'+data2[i]['label']+'</option>';
+	    	}
+	    	$("#" + html_id).html(html);
+	    	if (val){
+	    		$("#{{ widget.attrs.id }}").val('{{widget.value}}');
+	    	}
+	        {% endif %} 
+	    }
+	});
+}
+
+
+{% if widget.attrs.url %}
+	$( document ).ready(function(){
+		{{ widget.attrs.id }}_get_from_url(
+			"{{ widget.attrs.id }}",
+			"{{ widget.attrs.url }}",
+			{% if widget.attrs.arg %}"{{ widget.attrs.arg }}"{% else %}"obj"{% endif %},
+			{% if widget.attrs.dependent %}"{{ widget.attrs.dependent }}",{% endif %}
+			true,
+		)
+	});
+
+
+	{% if widget.attrs.dependent %}
+		$( document ).ready(function(){
+
+			if ($("#{{ widget.attrs.dependent }}").is("input[type=hidden]")){
+				$("#{{ widget.attrs.dependent }}_text_input").focusout(function(){
+					$("#{{ widget.attrs.id }}").val("");
+					$("#{{ widget.attrs.id }}_text_input").val("");
+					{{ widget.attrs.id }}_get_from_url(
+						"{{ widget.attrs.id }}",
+						"{{ widget.attrs.url }}",
+						{% if widget.attrs.arg %}"{{ widget.attrs.arg }}"{% else %}"obj"{% endif %},
+						{% if widget.attrs.dependent %}"{{ widget.attrs.dependent }}"{% endif %}
+					)
+				});
+			}
+
+			else if ($("#{{ widget.attrs.dependent }}").is("input")){
+				$("#{{ widget.attrs.dependent }}").focusout(function(){
+					$("#{{ widget.attrs.id }}").val("");
+					$("#{{ widget.attrs.id }}_text_input").val("");
+					{{ widget.attrs.id }}_get_from_url(
+						"{{ widget.attrs.id }}",
+						"{{ widget.attrs.url }}",
+						{% if widget.attrs.arg %}"{{ widget.attrs.arg }}"{% else %}"obj"{% endif %},
+						{% if widget.attrs.dependent %}"{{ widget.attrs.dependent }}"{% endif %}
+					)
+				});
+			}
+
+
+			else if ($("#{{ widget.attrs.dependent }}").is("select")){
+				$("#{{ widget.attrs.dependent }}").change(function(){
+					$("#{{ widget.attrs.id }}").val("");
+					$("#{{ widget.attrs.id }}_text_input").val("");
+					{{ widget.attrs.id }}_get_from_url(
+						"{{ widget.attrs.id }}",
+						"{{ widget.attrs.url }}",
+						{% if widget.attrs.arg %}"{{ widget.attrs.arg }}"{% else %}"obj"{% endif %},
+						{% if widget.attrs.dependent %}"{{ widget.attrs.dependent }}"{% endif %}
+					)
+				});
+			}
+			
+		});
+	{% endif %}
+{% endif %}
+
+</script>

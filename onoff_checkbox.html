@@ -1,0 +1,153 @@
+
+<style>
+
+
+/* {{ widget.attrs.id }}-Switch starts here */
+.{{ widget.attrs.id }}-rocker {
+  display: inline-block;
+  position: relative;
+  /*
+  SIZE OF {{ widget.attrs.id }}-SWITCH
+  ==============
+  All sizes are in em - therefore
+  changing the font-size here
+  will change the size of the {{ widget.attrs.id }}-switch.
+  See .{{ widget.attrs.id }}-rocker-small below as example.
+  */
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #888;
+  width: 7em;
+  height: 4em;
+  overflow: hidden;
+  border-bottom: 0.5em solid #eee;
+}
+
+.{{ widget.attrs.id }}-rocker-small {
+  font-size: 0.75em; /* Sizes the {{ widget.attrs.id }}-switch */
+  margin: 1em;
+}
+
+.{{ widget.attrs.id }}-rocker::before {
+  content: "";
+  position: absolute;
+  top: 11.4px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #999;
+  border: 0.5em solid #eee;
+  border-bottom: 0;
+}
+
+.{{ widget.attrs.id }}-rocker input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.{{ widget.attrs.id }}-switch-left,
+.{{ widget.attrs.id }}-switch-right {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5em;
+  width: 3em;
+  transition: 0.2s;
+}
+
+.{{ widget.attrs.id }}-switch-left {
+  height: 2.4em;
+  width: 2.75em;
+  left: 0.85em;
+  bottom: 0.4em;
+  background-color: #ddd;
+  transform: rotate(15deg) skewX(15deg);
+}
+
+.{{ widget.attrs.id }}-switch-right {
+  right: 0.5em;
+  bottom: 0;
+  background-color: #bd5757;
+  color: #fff;
+}
+
+.{{ widget.attrs.id }}-switch-left::before,
+.{{ widget.attrs.id }}-switch-right::before {
+  content: "";
+  position: absolute;
+  width: 0.4em;
+  height: 2.45em;
+  bottom: -0.45em;
+  background-color: #ccc;
+  transform: skewY(-65deg);
+}
+
+.{{ widget.attrs.id }}-switch-left::before {
+  left: -0.4em;
+}
+
+.{{ widget.attrs.id }}-switch-right::before {
+  right: -0.375em;
+  background-color: transparent;
+  transform: skewY(65deg);
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked + .{{ widget.attrs.id }}-switch-left {
+  background-color: #126c00;
+  color: #fff;
+  bottom: 0px;
+  left: 0.5em;
+  height: 2.5em;
+  width: 3em;
+  transform: rotate(0deg) skewX(0deg);
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked + .{{ widget.attrs.id }}-switch-left::before {
+  background-color: transparent;
+  width: 3.0833em;
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked + .{{ widget.attrs.id }}-switch-left + .{{ widget.attrs.id }}-switch-right {
+  background-color: #ddd;
+  color: #888;
+  bottom: 0.4em;
+  right: 0.8em;
+  height: 2.4em;
+  width: 2.75em;
+  transform: rotate(-15deg) skewX(-15deg);
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked + .{{ widget.attrs.id }}-switch-left + .{{ widget.attrs.id }}-switch-right::before {
+  background-color: #ccc;
+}
+
+/* Keyboard Users */
+label.{{ widget.attrs.id }}-rocker input:focus + .{{ widget.attrs.id }}-switch-left {
+  color: #333;
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked:focus + .{{ widget.attrs.id }}-switch-left {
+  color: #fff;
+}
+
+label.{{ widget.attrs.id }}-rocker input:focus + .{{ widget.attrs.id }}-switch-left + .{{ widget.attrs.id }}-switch-right {
+  color: #fff;
+}
+
+label.{{ widget.attrs.id }}-rocker input:checked:focus + .{{ widget.attrs.id }}-switch-left + .{{ widget.attrs.id }}-switch-right {
+  color: #333;
+}
+</style>
+
+
+<label class="{{ widget.attrs.id }}-rocker {{ widget.attrs.id }}-rocker-small">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"
+    {% endif %}{% include "django/forms/widgets/attrs.html" %}>
+    <span class="{{ widget.attrs.id }}-switch-left">Sim</span>
+    <span class="{{ widget.attrs.id }}-switch-right">Não</span>
+</label>

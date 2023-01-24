@@ -1,0 +1,59 @@
+
+
+<style>
+    input, textarea{font:14px/1.4 sans-serif;}
+
+#{{ widget.attrs.id }}-input-group{
+  display: table;
+  border-collapse: collapse;
+  width:260px;
+}
+#{{ widget.attrs.id }}-input-group > div{
+  display: table-cell;
+  border: 1px solid #ddd;
+  vertical-align: middle;  /* needed for Safari */
+}
+#{{ widget.attrs.id }}-input-group-icon{
+  background:#eee;
+  color: #777;
+  padding: 0 6px
+}
+#{{ widget.attrs.id }}-input-group input{
+  border: 0;
+  display: block;
+  width: 100%;
+        text-align: left;
+  padding: 5px;
+
+}
+    </style>
+
+<div id="{{ widget.attrs.id }}-input-group">
+  <div id="{{ widget.attrs.id }}-input-group-icon"><strong>R$</strong></div>
+  <div id="{{ widget.attrs.id }}-input-group-area">
+      <input type="text" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"
+    {% endif %}{% include "django/forms/widgets/attrs.html" %} value="" data-type="currency" placeholder="00,00">
+
+  </div>
+</div>
+<script>
+// Jquery Dependency
+//{{ widget.attrs.id }}
+$(document).ready(function(){
+    $("#{{ widget.attrs.id }}").val($("#{{ widget.attrs.id }}").val().replace('.', ','))
+    $("#{{ widget.attrs.id }}").inputmask('decimal', {
+      radixPoint:",",
+      groupSeparator: ".",
+      autoGroup: true,
+      digits: 2,
+      allowMinus: false,
+      digitsOptional: false,
+      placeholder: '0',
+      rightAlign: false,
+      onBeforeMask: function (value, opts) {
+        return value;
+      }
+});
+    $("#{{ widget.attrs.id }}").attr('style', 'text-align:left')
+})
+</script>

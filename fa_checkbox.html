@@ -1,0 +1,52 @@
+
+<style>
+
+.checkmark.checkmark-{{ widget.attrs.id }}{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: {{widget.attrs.height|default:'25px'}};
+  width: {{widget.attrs.width|default:'25px'}};
+  background-color: #eee0;
+  border-radius: 2px;
+}
+
+
+
+.check-container #checkmark-{{ widget.attrs.id }}:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\{{widget.attrs.fa_checked|default:'f14a'}}";
+}
+
+.check-container #checkmark-{{ widget.attrs.id }}::before{
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    content: "\{{widget.attrs.fa_unchecked|default:'f0c8'}}";
+    transition: font-size 250ms;
+}
+
+.check-container input:checked ~ #checkmark-{{ widget.attrs.id }} {
+  /*background-color: #2196F3;*/
+    color: {{widget.attrs.checked_color|default:'green'}};
+}
+
+.check-container input:not(:checked) ~ #checkmark-{{ widget.attrs.id }} {
+  /*background-color: #2196F3;*/
+    color: {{widget.attrs.unchecked_color|default:''}};
+}
+
+.check-container:hover input ~ .checkmark {
+  color: {{widget.attrs.checked_color|default:'#36ccb5'}};
+  font-size: 25px;
+}
+
+
+
+
+</style>
+<label class="check-container" for="{{ widget.attrs.id }}">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"
+    {% endif %}{% include "django/forms/widgets/attrs.html" %}>
+    <span class="checkmark checkmark-{{ widget.attrs.id }}" id="checkmark-{{ widget.attrs.id }}"></span>
+</label>

@@ -1,0 +1,13 @@
+
+
+
+
+
+{% for key in widget.attrs.d  %}
+<div>
+{{ key }} <input type="text" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}  class="vTextField" id= "{{ widget.attrs.id }}">
+</div>
+{% endfor  %}
+
+<script>
+</script>
